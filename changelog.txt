@@ -1,0 +1,5 @@
+10/10/2018
+==========
+Intial project creation
+Added simple log class
+Added static init class
