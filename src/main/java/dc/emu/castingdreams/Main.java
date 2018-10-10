@@ -7,6 +7,9 @@ package dc.emu.castingdreams;
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Hello dc");
+        if(!DCemu.loader.loadBinFile("dc_boot.bin", DCemu.memory.bios, 0, 0))
+        {
+            System.out.println("error loading bios into memory");
+        }
     }
 }
