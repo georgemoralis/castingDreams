@@ -1,5 +1,7 @@
 package dc.emu.castingdreams;
 
+import dc.emu.castingdreams.sh4.Disassembler;
+
 /**
  *
  * @author shadow
@@ -13,10 +15,11 @@ public class Main {
         int pc = 0xA0000000; //fake program counter address
         //print 50 opcodes
         //dreamcast program counter increase +2
+        //Sh4Disassembler dis = new Sh4Disassembler();
+        Disassembler dis = new Disassembler();
         for (int i = pc; i < pc + 100; i += 2) {
             int opcode = DCemu.memory.read16(i);
-            System.out.println(String.format("0x%08x: %04x", i,opcode));
-            //System.out.println("0x" + Integer.toHexString(i) + " 0x" + Integer.toHexString(opcode));
+            System.out.println(String.format("0x%08x: %04x %s", i,opcode,dis.disasm(i, opcode)));
         }
     }
 }
