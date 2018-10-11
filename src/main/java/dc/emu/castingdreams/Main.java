@@ -15,7 +15,8 @@ public class Main {
         //dreamcast program counter increase +2
         for (int i = pc; i < pc + 100; i += 2) {
             int opcode = DCemu.memory.read16(i);
-            System.out.println("0x" + Integer.toHexString(i) + " 0x" + Integer.toHexString(opcode));
+            System.out.println(String.format("0x%08x: %04x", i,opcode));
+            //System.out.println("0x" + Integer.toHexString(i) + " 0x" + Integer.toHexString(opcode));
         }
     }
 }
