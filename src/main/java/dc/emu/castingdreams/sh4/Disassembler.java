@@ -145,8 +145,7 @@ public class Disassembler {
                                 //STSMACH(opcode);
                                 return String.format("???");
                             case 1:
-                                //STSMACL(opcode);
-                                return String.format("???");
+                                return String.format("sts MACL, R%d",RN(opcode));
                             case 2:
                                 //STSPR(opcode);
                                 return String.format("???");
@@ -225,14 +224,12 @@ public class Disassembler {
                         //DIV0S(opcode);
                         return String.format("???");
                     case 8:
-                        //TST(opcode);
-                        return String.format("???");
+                        return String.format("tst R%d, R%d",RM(opcode),RN(opcode));
                     case 9:
                         //AND(opcode);
                         return String.format("???");
                     case 10:
-                        //XOR(opcode);
-                        return String.format("???");
+                        return String.format("xor R%d, R%d",RM(opcode),RN(opcode));
                     case 11:
                         //OR(opcode);
                         return String.format("???");
@@ -500,9 +497,9 @@ public class Disassembler {
                                 //SHLL2(opcode);
                                 return String.format("???");
                             case 1:
-                                return String.format("SHLL8 R%d",RN(opcode));
+                                return String.format("shll8 R%d",RN(opcode));
                             case 2:
-                                return String.format("SHLL16 R%d", RN(opcode));
+                                return String.format("shll16 R%d", RN(opcode));
                             default:
                                 return String.format("???");
                         }
@@ -510,7 +507,7 @@ public class Disassembler {
                     case 9:
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
-                                return String.format("SHLR2 R%d",RN(opcode));
+                                return String.format("shlr2 R%d",RN(opcode));
                             case 1:
                                 //SHLR8(opcode);
                                 return String.format("???");
@@ -653,7 +650,7 @@ public class Disassembler {
                         //SWAPB(opcode);
                         return String.format("???");
                     case 9:
-                        return String.format("SWAP.W R%d, R%d", RM(opcode), RN(opcode));
+                        return String.format("swap.w R%d, R%d", RM(opcode), RN(opcode));
                     case 10:
                         //NEGC(opcode);
                         return String.format("???");

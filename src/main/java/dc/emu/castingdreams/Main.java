@@ -15,7 +15,6 @@ public class Main {
         int pc = 0xA0000000; //fake program counter address
         //print 50 opcodes
         //dreamcast program counter increase +2
-        //Sh4Disassembler dis = new Sh4Disassembler();
         Disassembler dis = new Disassembler();
         for (int i = pc; i < pc + 100; i += 2) {
             int opcode = DCemu.memory.read16(i);

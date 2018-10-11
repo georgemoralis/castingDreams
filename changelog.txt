@@ -3,6 +3,7 @@
 -added read16 to memory in order to start disasm instructions (so far it appears that bios opcode strings are correct)
 -better output with String.format
 -Added dissasembler decoder and implemented some simple instructions disasm
+-More dissasembler work
 
 10/10/2018
 ==========
