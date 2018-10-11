@@ -1,5 +1,6 @@
 package dc.emu.castingdreams.memory;
 
+import dc.emu.castingdreams.util.UnsignedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
@@ -20,4 +21,8 @@ public class Memory {
         bios.order(ByteOrder.LITTLE_ENDIAN);
     }
 
+    public int read16(int address) {
+        //we have only loaded bios so return only from there atm
+        return UnsignedBuffer.getUnsignedShort(bios, address& 0x1fffffff);
+    }
 }
