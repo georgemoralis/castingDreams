@@ -25,3 +25,4 @@ hs_err_pid*
 /dc_boot.bin
 /ioregsLog.txt
 /serialLog.txt
+/ip.bin

@@ -14,6 +14,14 @@ public class Disassembler {
         return ((opcode & 0x0f00) >> 8);
     }
 
+    private static final int IMM(int opcode) {
+        return (opcode & 0x00ff);
+    }
+
+    private static final int DISP(int opcode) {
+        return (opcode & 0x000f);
+    }
+
     public String disasm(int pc, int opcode) {
         switch ((opcode >>> 12) & 0xf) {
             case 0:
@@ -22,43 +30,43 @@ public class Disassembler {
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
                                 //STCSR(opcode);
-                                return String.format("???");
+                                return String.format("STCSR ???");
                             case 1:
                                 //STCGBR(opcode);
-                                return String.format("???");
+                                return String.format("STCGBR ???");
                             case 2:
                                 //STCVBR(opcode);
-                                return String.format("???");
+                                return String.format("STCVBR ???");
                             case 3:
                                 //STCSSR(opcode);
-                                return String.format("???");
+                                return String.format("STCSSR ???");
                             case 4:
                                 //STCSPC(opcode);
-                                return String.format("???");
+                                return String.format("STCSPC ???");
                             case 8:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             case 9:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             case 10:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             case 11:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             case 12:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             case 13:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             case 14:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             case 15:
                                 //STCRBANK(opcode);
-                                return String.format("???");
+                                return String.format("STCRBANK ???");
                             default:
                                 return String.format("???");
                         }
@@ -72,8 +80,7 @@ public class Disassembler {
                                 //BRAF(opcode);
                                 return String.format("???");
                             case 8:
-                                //PREF(opcode);
-                                return String.format("???");
+                                return String.format("pref @R%d", RN(opcode));
                             case 9:
                                 //OCBI(opcode);
                                 return String.format("???");
@@ -85,23 +92,23 @@ public class Disassembler {
                                 return String.format("???");
                             case 12:
                                 //MOVCAL(opcode);
-                                return String.format("???");
+                                return String.format("MOVCAL ???");
                             default:
                                 return String.format("???");
                         }
 
                     case 4:
                         //MOVBS0(opcode);
-                        return String.format("???");
+                        return String.format("MOVBS0 ???");
                     case 5:
                         //MOVWS0(opcode);
-                        return String.format("???");
+                        return String.format("MOVWS0 ???");
                     case 6:
                         //MOVLS0(opcode);
-                        return String.format("???");
+                        return String.format("MOVLS0 ???");
                     case 7:
                         //MULL(opcode);
-                        return String.format("???");
+                        return String.format("MULL ???");
 
                     case 8:
                         switch ((opcode >>> 4) & 0xf) {
@@ -127,14 +134,13 @@ public class Disassembler {
                     case 9:
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
-                                //NOP(opcode);
-                                return String.format("???");
+                                return String.format("nop");
                             case 1:
                                 //DIV0U(opcode);
                                 return String.format("???");
                             case 2:
                                 //MOVT(opcode);
-                                return String.format("???");
+                                return String.format("MOVT ???");
                             default:
                                 return String.format("???");
                         }
@@ -143,9 +149,9 @@ public class Disassembler {
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
                                 //STSMACH(opcode);
-                                return String.format("???");
+                                return String.format("STSMACH ???");
                             case 1:
-                                return String.format("sts MACL, R%d",RN(opcode));
+                                return String.format("sts MACL, R%d", RN(opcode));
                             case 2:
                                 //STSPR(opcode);
                                 return String.format("???");
@@ -169,26 +175,26 @@ public class Disassembler {
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
                                 // RTS(opcode);
-                                return String.format("???");
+                                return String.format("RTS ???");
                             case 1:
                                 //SLEEP(opcode);
-                                return String.format("???");
+                                return String.format("SLEEP ???");
                             case 2:
                                 //RTE(opcode);
-                                return String.format("???");
+                                return String.format("RTE ???");
                             default:
                                 return String.format("???");
                         }
 
                     case 12:
                         //MOVBL0(opcode);
-                        return String.format("???");
+                        return String.format("MOVBL0 ???");
                     case 13:
                         //MOVWL0(opcode);
-                        return String.format("???");
+                        return String.format("MOVWL0 ???");
                     case 14:
                         //MOVLL0(opcode);
-                        return String.format("???");
+                        return String.format("MOVLL0 ???");
                     case 15:
                         //MACL(opcode);
                         return String.format("???");
@@ -197,42 +203,39 @@ public class Disassembler {
                 }
 
             case 1:
-                //MOVLS4(opcode);
-                return String.format("???");
+                return String.format("mov.l R%d, @(%d, R%d)",RM(opcode),DISP(opcode),RN(opcode));
 
             case 2:
                 switch ((opcode) & 0xf) {
                     case 0:
                         //MOVBS(opcode);
-                        return String.format("???");
+                        return String.format("MOVBS ???");
                     case 1:
                         //MOVWS(opcode);
-                        return String.format("???");
+                        return String.format("MOVWS ???");
                     case 2:
                         //MOVLS(opcode);
-                        return String.format("???");
+                        return String.format("MOVLS ???");
                     case 4:
                         //MOVBM(opcode);
-                        return String.format("???");
+                        return String.format("MOVBM ???");
                     case 5:
                         //MOVWM(opcode);
-                        return String.format("???");
+                        return String.format("MOVWM ???");
                     case 6:
                         //MOVLM(opcode);
-                        return String.format("???");
+                        return String.format("MOVLM ???");
                     case 7:
                         //DIV0S(opcode);
-                        return String.format("???");
+                        return String.format("DIV0S ???");
                     case 8:
-                        return String.format("tst R%d, R%d",RM(opcode),RN(opcode));
+                        return String.format("tst R%d, R%d", RM(opcode), RN(opcode));
                     case 9:
-                        //AND(opcode);
-                        return String.format("???");
+                        return String.format("and R%d, R%d", RM(opcode), RN(opcode));
                     case 10:
-                        return String.format("xor R%d, R%d",RM(opcode),RN(opcode));
+                        return String.format("xor R%d, R%d", RM(opcode), RN(opcode));
                     case 11:
-                        //OR(opcode);
-                        return String.format("???");
+                        return String.format("or R%d, R%d", RM(opcode), RN(opcode));
                     case 12:
                         //CMPSTR(opcode);
                         return String.format("???");
@@ -240,11 +243,10 @@ public class Disassembler {
                         //XTRCT(opcode);
                         return String.format("???");
                     case 14:
-                        //MULSU(opcode);
-                        return String.format("???");
+                        return String.format("mulu.w R%d, R%d", RM(opcode), RN(opcode));
                     case 15:
                         // MULSW(opcode);
-                        return String.format("???");
+                        return String.format("MULSW ???");
                     default:
                         return String.format("???");
                 }
@@ -253,10 +255,10 @@ public class Disassembler {
                 switch ((opcode) & 0xf) {
                     case 0:
                         //CMPEQ(opcode);
-                        return String.format("???");
+                        return String.format("CMPEQ ???");
                     case 2:
                         //CMPHS(opcode);
-                        return String.format("???");
+                        return String.format("CMPHS ???");
                     case 3:
                         //CMPGE(opcode);
                         return String.format("???");
@@ -323,8 +325,7 @@ public class Disassembler {
                                 //CMPPZ(opcode);
                                 return String.format("???");
                             case 2:
-                                //SHAR(opcode);
-                                return String.format("???");
+                                return String.format("shar R%d", RN(opcode));
                             default:
                                 return String.format("???");
                         }
@@ -410,8 +411,7 @@ public class Disassembler {
                     case 5:
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
-                                //ROTR(opcode);
-                                return String.format("???");
+                                return String.format("rotr R%d", RN(opcode));
                             case 1:
                                 //CMPPL(opcode);
                                 return String.format("???");
@@ -497,7 +497,7 @@ public class Disassembler {
                                 //SHLL2(opcode);
                                 return String.format("???");
                             case 1:
-                                return String.format("shll8 R%d",RN(opcode));
+                                return String.format("shll8 R%d", RN(opcode));
                             case 2:
                                 return String.format("shll16 R%d", RN(opcode));
                             default:
@@ -507,7 +507,7 @@ public class Disassembler {
                     case 9:
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
-                                return String.format("shlr2 R%d",RN(opcode));
+                                return String.format("shlr2 R%d", RN(opcode));
                             case 1:
                                 //SHLR8(opcode);
                                 return String.format("???");
@@ -551,8 +551,7 @@ public class Disassembler {
                                 //TAS(opcode);
                                 return String.format("???");
                             case 2:
-                                // JMP(opcode);
-                                return String.format("???");
+                                return String.format("jmp @R%d", RN(opcode));
                             default:
                                 return String.format("???");
                         }
@@ -617,38 +616,36 @@ public class Disassembler {
                 }
 
             case 5:
-                //MOVLL4(opcode);
-                return String.format("???");
+                return String.format("mov.l @(%d, R%d), R%d",DISP(opcode),RM(opcode),RN(opcode));
 
             case 6:
                 switch ((opcode) & 0xf) {
                     case 0:
                         //MOVBL(opcode);
-                        return String.format("???");
+                        return String.format("MOVBL ???");
                     case 1:
                         //MOVWL(opcode);
-                        return String.format("???");
+                        return String.format("MOVWL ???");
                     case 2:
                         //MOVLL(opcode);
-                        return String.format("???");
+                        return String.format("MOVLL ???");
                     case 3:
-                        //MOV(opcode);
-                        return String.format("???");
+                        return String.format("mov R%d, R%d", RM(opcode), RN(opcode));
                     case 4:
                         //MOVBP(opcode);
-                        return String.format("???");
+                        return String.format("MOVBP ???");
                     case 5:
                         //MOVWP(opcode);
-                        return String.format("???");
+                        return String.format("MOVWP ???");
                     case 6:
                         //MOVLP(opcode);
-                        return String.format("???");
+                        return String.format("MOVLP ???");
                     case 7:
                         //NOT(opcode);
-                        return String.format("???");
+                        return String.format("NOT ???");
                     case 8:
                         //SWAPB(opcode);
-                        return String.format("???");
+                        return String.format("SWAPB ???");
                     case 9:
                         return String.format("swap.w R%d, R%d", RM(opcode), RN(opcode));
                     case 10:
@@ -671,33 +668,34 @@ public class Disassembler {
                         return String.format("???");
                 }
 
-            case 7:
-                //ADDI(opcode);
-                return String.format("???");
+            case 7: {
+                int temp = (((IMM(opcode) << 24)) >> 24);
+                return String.format((temp < 0) ? "sub #0x%02X, R%d" : "add #0x%02X, R%d", temp < 0 ? 0 - temp : temp, RN(opcode));
+            }
 
             case 8:
                 switch ((opcode >>> 8) & 0xf) {
                     case 0:
                         //MOVBS4(opcode);
-                        return String.format("???");
+                        return String.format("MOVBS4 ???");
                     case 1:
-                        //MOVWS4(opcode);
-                        return String.format("???");
+                        return String.format("mov.w R0, @(%d, R%d)", DISP(opcode), RM(opcode));
                     case 4:
                         //MOVBL4(opcode);
-                        return String.format("???");
+                        return String.format("MOVBL4 ???");
                     case 5:
                         //MOVWL4(opcode);
-                        return String.format("???");
+                        return String.format("MOVWL4 ???");
                     case 8:
                         //CMPIM(opcode);
                         return String.format("???");
                     case 9:
                         //BT(opcode);
                         return String.format("???");
-                    case 11:
-                        //BF(opcode);
-                        return String.format("???");
+                    case 11: {
+                        int temp = (((IMM(opcode) << 24)) >> 24) * 2;
+                        return String.format("bf #0x%08X", temp + (pc + 4));
+                    }
                     case 13:
                         //BTS(opcode);
                         return String.format("???");
@@ -710,7 +708,7 @@ public class Disassembler {
 
             case 9:
                 //MOVWI(opcode);
-                return String.format("???");
+                return String.format("MOVWI ???");
             case 10:
                 //BRA(opcode);
                 return String.format("???");
@@ -722,28 +720,28 @@ public class Disassembler {
                 switch ((opcode >>> 8) & 0xf) {
                     case 0:
                         //MOVBSG(opcode);
-                        return String.format("???");
+                        return String.format("MOVBSG ???");
                     case 1:
                         //MOVWSG(opcode);
-                        return String.format("???");
+                        return String.format("MOVWSG ???");
                     case 2:
                         //MOVLSG(opcode);
-                        return String.format("???");
+                        return String.format("MOVLSG ???");
                     case 3:
                         //TRAPA(opcode);
                         return String.format("???");
                     case 4:
                         //MOVBLG(opcode);
-                        return String.format("???");
+                        return String.format("MOVBLG ???");
                     case 5:
                         //MOVWLG(opcode);
-                        return String.format("???");
+                        return String.format("MOVWLG ???");
                     case 6:
                         //MOVLLG(opcode);
-                        return String.format("???");
+                        return String.format("MOVLLG ???");
                     case 7:
                         //MOVA(opcode);
-                        return String.format("???");
+                        return String.format("MOVA ???");
                     case 8:
                         //TSTI(opcode);
                         return String.format("???");
@@ -773,9 +771,10 @@ public class Disassembler {
             case 13:
                 //MOVLI(opcode);
                 return String.format("???");
-            case 14:
-                //MOVI(opcode);
-                return String.format("???");
+            case 14: {
+                int temp = (IMM(opcode) << 24) >> 24;
+                return String.format((temp < 0) ? "mov #0x%08X, R%d" : "mov #0x%02X, R%d", temp, RN(opcode));
+            }
 
             case 15:
                 switch ((opcode) & 0xf) {

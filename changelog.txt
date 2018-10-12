@@ -1,3 +1,7 @@
+12/10/2018
+==========
+-More instructions to disassembler
+
 11/10/2018
 ==========
 -added read16 to memory in order to start disasm instructions (so far it appears that bios opcode strings are correct)
