@@ -1,6 +1,9 @@
 24/10/2018
 ==========
 -Added configuration file class
+-Started skeleton for interpreter cpu
+-Added first cpu instruction (MOV #imm,Rn)
+-Added another cpu instruction ( SHLL16 Rn)
 
 22/10/2018
 ==========

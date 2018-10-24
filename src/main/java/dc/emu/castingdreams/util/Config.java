@@ -27,7 +27,7 @@ public class Config {
         file = new File("castingDreams.ini");
         configuration = new Properties();
         if (!file.exists()) {
-            write("dc_bios", "dc_boot.bin");
+            write("bios_path", "dc_boot.bin");
         }
     }
 
@@ -46,7 +46,7 @@ public class Config {
             return false;
         }
         //read values
-        biosPath = configuration.getProperty("dc_bios");
+        biosPath = configuration.getProperty("bios_path");
         return true;
     }
 

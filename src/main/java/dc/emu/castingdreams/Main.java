@@ -16,6 +16,8 @@ public class Main {
         if (!DCemu.loader.loadBinFile(DCemu.config.getBiosPath(), DCemu.memory.bios, 0, 0)) {
             System.out.println("error loading bios into memory");
         }
+        DCemu.sh4cpu.run();
+        /*
         int pc = 0xA0000000; //fake program counter address
         //print 100 opcodes
         //dreamcast program counter increase +2
@@ -23,6 +25,6 @@ public class Main {
         for (int i = pc; i < pc + 200; i += 2) {
             int opcode = DCemu.memory.read16(i);
             System.out.println(String.format("0x%08x: %04x %s", i, opcode, dis.disasm(i, opcode)));
-        }
+        }*/
     }
 }
