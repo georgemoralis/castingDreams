@@ -9,7 +9,11 @@ import dc.emu.castingdreams.sh4.Disassembler;
 public class Main {
 
     public static void main(String[] args) {
-        if (!DCemu.loader.loadBinFile("dc_boot.bin", DCemu.memory.bios, 0, 0)) {
+        if (!DCemu.config.load()) {
+            System.out.println("error loading configuration file Exiting...");
+            return;
+        }
+        if (!DCemu.loader.loadBinFile(DCemu.config.getBiosPath(), DCemu.memory.bios, 0, 0)) {
             System.out.println("error loading bios into memory");
         }
         int pc = 0xA0000000; //fake program counter address
@@ -18,7 +22,7 @@ public class Main {
         Disassembler dis = new Disassembler();
         for (int i = pc; i < pc + 200; i += 2) {
             int opcode = DCemu.memory.read16(i);
-            System.out.println(String.format("0x%08x: %04x %s", i,opcode,dis.disasm(i, opcode)));
+            System.out.println(String.format("0x%08x: %04x %s", i, opcode, dis.disasm(i, opcode)));
         }
     }
 }

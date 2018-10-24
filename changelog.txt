@@ -1,3 +1,7 @@
+24/10/2018
+==========
+-Added configuration file class
+
 22/10/2018
 ==========
 -More instructions to disassembler
