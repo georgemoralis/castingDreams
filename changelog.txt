@@ -3,6 +3,7 @@
 -Finished instruction decoder for sh-4
 -Implemented a few more instructions
 -Now it crashes while reading SH-4 mapped registers (EXPEVT one) need to implemented them
+-Intial SH4 mapped implementation (for reading EXPEVT value)
 
 24/10/2018
 ==========

@@ -34,6 +34,7 @@ public class Sh4Int {
         vbr = 0;
         pc = 0xa0000000;
         fpscr = 0x00040001;
+        DCemu.sh4regs.hardReset();
     }
 
     public void run() {
@@ -1163,6 +1164,15 @@ public class Sh4Int {
         pc += 2;
     }
 
+    /* XOR Rm,Rn */
+    private void XOR(int code) {
+        int m = RM(code);
+        int n = RN(code);
+        registers[n] ^= registers[m];
+        cycles--;
+        pc += 2;
+    }
+
     /**
      *
      *
@@ -1754,13 +1764,6 @@ public class Sh4Int {
     }
 
     private void TSTM(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void XOR(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));

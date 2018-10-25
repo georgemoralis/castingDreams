@@ -1,5 +1,6 @@
 package dc.emu.castingdreams.memory;
 
+import dc.emu.castingdreams.DCemu;
 import dc.emu.castingdreams.util.UnsignedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -9,7 +10,9 @@ import java.nio.ByteOrder;
  * @author shadow
  */
 public class Memory {
-
+    /**
+     * memory class atm is a big hack need a lot more work
+     */
     public ByteBuffer ram;
     public ByteBuffer bios;
 
@@ -27,7 +30,10 @@ public class Memory {
     }
 
     public long read32(int address) {
-        System.out.println("0x " + Integer.toHexString(address));
+        if(address >= 0xe0000000 && address<= 0xffffffff)//map SH4 memory mapped registers
+        {
+            return DCemu.sh4regs.read32(address);
+        }
         //we have only loaded bios so return only from there atm
         return UnsignedBuffer.getUnsignedInt(bios, address & 0x1fffffff);
     }
