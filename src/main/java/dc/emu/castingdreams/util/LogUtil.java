@@ -37,6 +37,7 @@ public class LogUtil {
                 try {
                     logRegs.write(str);
                     logRegs.write("\n");
+                    logRegs.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

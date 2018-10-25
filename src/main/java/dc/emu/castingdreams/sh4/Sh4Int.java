@@ -36,10 +36,11 @@ public class Sh4Int {
         fpscr = 0x00040001;
         DCemu.sh4regs.hardReset();
     }
+    boolean unimplemented = false;
 
     public void run() {
         int stop = 0;
-        while (stop != -1) {
+        while (stop != -1 && !unimplemented) {
             int opcode = DCemu.memory.read16(pc);
             stop = decode(opcode);
         }
@@ -281,7 +282,7 @@ public class Sh4Int {
                         XTRCT(opcode);
                         return 0;
                     case 14:
-                        MULSU(opcode);
+                        MULUW(opcode);
                         return 0;
                     case 15:
                         MULSW(opcode);
@@ -1173,6 +1174,23 @@ public class Sh4Int {
         pc += 2;
     }
 
+    /* MULU.W Rm,Rn */
+    private void MULUW(int code) {
+        int m = RM(code);
+        int n = RN(code);
+        macl = (((int) registers[n] & 0xFFFF) * ((int) registers[m] & 0xFFFF));
+        cycles -= 2;
+        pc += 2;
+    }
+
+    /* STS MACL,Rn */
+    private void STSMACL(int code) {
+        int n = RN(code);
+        registers[n] = macl;
+        cycles--;
+        pc += 2;
+    }
+
     /**
      *
      *
@@ -1649,13 +1667,6 @@ public class Sh4Int {
         dumpRegisters();
     }
 
-    private void MULSU(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
     private void NEG(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
@@ -1740,6 +1751,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
+        unimplemented =true;
     }
 
     private void TAS(int code) {
@@ -1747,6 +1759,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
+        unimplemented =true;
     }
 
     private void TST(int code) {
@@ -1754,6 +1767,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
+        unimplemented =true;
     }
 
     private void TSTI(int code) {
@@ -1761,6 +1775,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
+        unimplemented =true;
     }
 
     private void TSTM(int code) {
@@ -2301,7 +2316,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-
+        unimplemented = true;
     }
 
     private void STCMSGR(int code) {
@@ -2309,6 +2324,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
+        unimplemented = true;
     }
 
     private void STCMDBR(int code) {
@@ -2316,7 +2332,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-
+        unimplemented = true;
     }
 
     private void STCMRBANK(int code) {
@@ -2324,7 +2340,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-
+        unimplemented = true;
     }
 
     private void STSMACH(int code) {
@@ -2332,15 +2348,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-
-    }
-
-    private void STSMACL(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-
+        unimplemented = true;
     }
 
     private void STSPR(int code) {

@@ -4,6 +4,7 @@
 -Implemented a few more instructions
 -Now it crashes while reading SH-4 mapped registers (EXPEVT one) need to implemented them
 -Intial SH4 mapped implementation (for reading EXPEVT value)
+-Some more work on interpreter
 
 24/10/2018
 ==========

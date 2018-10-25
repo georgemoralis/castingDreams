@@ -41,7 +41,6 @@ public class Sh4Regs {
         if (Debug.logIOREGS) {
             DCemu.logger.log(LogUtil.IOREGS, "read32  " + Sh4RegsNames.getName(address));
         }
-        System.out.println(Sh4RegsNames.getName(address));
         return UnsignedBuffer.getUnsignedInt(regMap, getMemoryAddress(address));
     }
 }
