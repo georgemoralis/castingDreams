@@ -23,6 +23,12 @@ public class Memory {
 
     public int read16(int address) {
         //we have only loaded bios so return only from there atm
-        return UnsignedBuffer.getUnsignedShort(bios, address& 0x1fffffff);
+        return UnsignedBuffer.getUnsignedShort(bios, address & 0x1fffffff);
+    }
+
+    public long read32(int address) {
+        System.out.println("0x " + Integer.toHexString(address));
+        //we have only loaded bios so return only from there atm
+        return UnsignedBuffer.getUnsignedInt(bios, address & 0x1fffffff);
     }
 }

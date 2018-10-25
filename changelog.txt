@@ -1,3 +1,9 @@
+25/10/2018
+==========
+-Finished instruction decoder for sh-4
+-Implemented a few more instructions
+-Now it crashes while reading SH-4 mapped registers (EXPEVT one) need to implemented them
+
 24/10/2018
 ==========
 -Added configuration file class
