@@ -1191,6 +1191,41 @@ public class Sh4Int {
         pc += 2;
     }
 
+    /* TST Rm,Rn */
+    private void TST(int code) {
+        int m = RM(code);
+        int n = RN(code);
+
+        if ((registers[n] & registers[m]) == 0) {
+            sr |= SR_FLAG_T_MASK;
+        } else {
+            sr &= (~SR_FLAG_T_MASK);
+        }
+
+        cycles--;
+        pc += 2;
+    }
+
+    /* MOV.L Rm,@(disp,Rn) */
+    private void MOVLS4(int code) {//recheck!
+        int d = (code & 0x0f);
+        int m = RM(code);
+        int n = RN(code);
+
+        DCemu.memory.write32(registers[n] + (d << 2), registers[m]);
+        cycles--;
+        pc += 2;
+    }
+
+    /* ADD #imm,Rn */
+    private void ADDI(int code) { //recheck!!
+        int n = RN(code);
+        byte b = (byte) (code & 0xff);
+        registers[n] += (int) b;
+        cycles--;
+        pc += 2;
+    }
+
     /**
      *
      *
@@ -1321,13 +1356,6 @@ public class Sh4Int {
     }
 
     private void MOVWS4(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void MOVLS4(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
@@ -1479,13 +1507,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-    }
-
-    private void ADDI(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+        unimplemented = true;
     }
 
     private void ADDC(int code) {
@@ -1751,7 +1773,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-        unimplemented =true;
+        unimplemented = true;
     }
 
     private void TAS(int code) {
@@ -1759,15 +1781,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-        unimplemented =true;
-    }
-
-    private void TST(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-        unimplemented =true;
+        unimplemented = true;
     }
 
     private void TSTI(int code) {
@@ -1775,7 +1789,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-        unimplemented =true;
+        unimplemented = true;
     }
 
     private void TSTM(int code) {
@@ -1840,6 +1854,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
+        unimplemented=true;
 
     }
 
@@ -1898,11 +1913,19 @@ public class Sh4Int {
 
     }
 
-    private void BF(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+    /* BF disp */
+    private void BF(int code) { //partial!!!
+        if ((sr & SR_FLAG_T_MASK) == 0) {
+            Disassembler dis = new Disassembler();
+            System.out.println("Unsupported instruction");
+            System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
+            dumpRegisters();
+            unimplemented = true;
+        } else {
+            cycles--;
+            pc += 2;
+        }
+
     }
 
     private void BFS(int code) {

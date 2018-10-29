@@ -1,3 +1,8 @@
+29/10/2018
+==========
+-Added a few more opcodes. Now we reach the first write to MMUCR register
+-Added more opcodes. Now we also write to CCR register
+
 25/10/2018
 ==========
 -Finished instruction decoder for sh-4
