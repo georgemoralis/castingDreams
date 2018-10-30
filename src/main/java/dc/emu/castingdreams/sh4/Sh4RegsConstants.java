@@ -10,12 +10,17 @@ public class Sh4RegsConstants {
     public static final int EXPEVT = 0xff000024;
     public static final int INTEVT = 0xff000028;
     public static final int TRA = 0xff000020;
-    
+
     public static final int CCR = 0xff00001c;
-    public static final int MMUCR = 0xff000010;    
+    public static final int MMUCR = 0xff000010;
     public static final int QACR0 = 0xff000038;
     public static final int QACR1 = 0xff00003c;
-    
+
+    /* Bus-state registers */
+    public static final int BCR1 = 0xff800000;
+    public static final int BCR2 = 0xff800004;
+    public static final int WCR1 = 0xff800008;
+    public static final int WCR2 = 0xff80000c;
     /* interrupt controller */
     public static final int IPRA = 0xffd00004;
     public static final int IPRB = 0xffd00008;

@@ -6,6 +6,11 @@ public enum Sh4RegsNames {
     MMUCR(0xff000010),
     QACR0(0xff000038),
     QACR1(0xff00003c),
+    //bus state registers
+    BCR1(0xff800000),
+    BCR2(0xff800004),
+    WCR1(0xff800008),
+    WCR2(0xff80000c),
     //The Timer Unit
     TOCR(0xffd80000),
     TSTR(0xffd80004),

@@ -1087,6 +1087,8 @@ public class Sh4Int {
             }
             System.out.print("\n");
         }
+        System.out.print(String.format("PC : %08X", pc));
+        System.out.print("\n");
     }
 
     public int RN(int x) {
@@ -1226,6 +1228,106 @@ public class Sh4Int {
         pc += 2;
     }
 
+    /* SHAR Rn */
+    private void SHAR(int code) {
+        int n = RN(code);
+        int temp = 0;
+        if ((registers[n] & 0x00000001) == 0) {
+            sr &= (~SR_FLAG_T_MASK);
+        } else {
+            sr |= SR_FLAG_T_MASK;
+        }
+        if ((registers[n] & 0x80000000) == 0) {
+            temp = 0;
+        } else {
+            temp = 1;
+        }
+        registers[n] >>= 1;
+        if (temp == 1) {
+            registers[n] |= 0x80000000;
+        } else {
+            registers[n] &= 0x7FFFFFFF;
+        }
+        cycles--;
+        pc += 2;
+    }
+
+    /* MOV.W R0,@(disp,Rn) */
+    private void MOVWS4(int code) {
+        int d = ((code >> 0) & 0x0f);
+        int n = RM(code);
+        DCemu.memory.write16(registers[n] + (d << 1), registers[0]);
+        cycles--;
+        pc += 2;
+    }
+
+    /* OR #imm,R0 */
+    private void ORI(int code) {
+        int i = ((code >> 0) & 0xff);
+        registers[0] |= i;
+        cycles--;
+        pc += 2;
+    }
+
+    /* SHLR Rn */
+    private void SHLR(int code) {
+        int n = RN(code);
+
+        sr = (sr & ~SR_FLAG_T_MASK) | (registers[n] & 1);
+        registers[n] >>>= 1;
+        registers[n] &= 0x7FFFFFFF;
+
+        cycles--;
+        pc += 2;
+
+    }
+
+    /* ROTR Rn */
+    private void ROTR(int code) {
+        int n = RN(code);
+
+        if ((registers[n] & SR_FLAG_T_MASK) != 0) {
+            sr |= SR_FLAG_T_MASK;
+        } else {
+            sr &= ~SR_FLAG_T_MASK;
+        }
+
+        registers[n] >>>= 1;
+
+        if ((sr & SR_FLAG_T_MASK) != 0) {
+            registers[n] |= 0x80000000;
+        } else {
+            registers[n] &= 0x7FFFFFFF;
+        }
+        cycles--;
+        pc += 2;
+    }
+
+    /* MOV Rm,Rn */
+    private void MOV(int code) {
+        int m = RM(code);
+        int n = RN(code);
+
+        registers[n] = registers[m];
+
+        cycles--;
+        pc += 2;
+    }
+
+    /* TST #imm,R0 */
+    private void TSTI(int code) {
+        int i = ((code >> 0) & 0xff);
+
+        if ((registers[0] & i) != 0) {
+            sr |= SR_FLAG_T_MASK;
+        } else {
+            sr &= (~SR_FLAG_T_MASK);
+        }
+
+        cycles--;
+        pc += 2;
+    }
+
     /**
      *
      *
@@ -1249,13 +1351,6 @@ public class Sh4Int {
     }
 
     private void MOVLI(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void MOV(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
@@ -1349,13 +1444,6 @@ public class Sh4Int {
     }
 
     private void MOVBS4(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void MOVWS4(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
@@ -1758,14 +1846,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-    }
-
-    private void ORI(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-
+        unimplemented = true;
     }
 
     private void ORM(int code) {
@@ -1777,14 +1858,6 @@ public class Sh4Int {
     }
 
     private void TAS(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-        unimplemented = true;
-    }
-
-    private void TSTI(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
@@ -1807,13 +1880,6 @@ public class Sh4Int {
     }
 
     private void XORM(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void ROTR(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
@@ -1849,15 +1915,6 @@ public class Sh4Int {
 
     }
 
-    private void SHAR(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-        unimplemented=true;
-
-    }
-
     private void SHLD(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
@@ -1874,14 +1931,6 @@ public class Sh4Int {
     }
 
     private void SHLL(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-
-    }
-
-    private void SHLR(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
@@ -2220,6 +2269,7 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
+        unimplemented=true;
     }
 
     private void SETS(int code) {

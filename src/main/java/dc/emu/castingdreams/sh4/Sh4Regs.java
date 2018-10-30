@@ -32,11 +32,19 @@ public class Sh4Regs {
     public void hardReset() {
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.EXPEVT), 0);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.MMUCR), 0);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.CCR), 0);
+        UnsignedBuffer.putUnsignedShort(regMap, getMemoryAddress(Sh4RegsConstants.BCR2), 0x3ffc);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR1), 0x77777777);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR2), 0xfffeefff);
     }
 
     public void manualReset() {
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.EXPEVT), 0x20);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.MMUCR), 0);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.CCR), 0);
+        UnsignedBuffer.putUnsignedShort(regMap, getMemoryAddress(Sh4RegsConstants.BCR2), 0);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR1), 0);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR2), 0);
     }
 
     public long read32(int address) {
@@ -45,6 +53,14 @@ public class Sh4Regs {
         }
         return UnsignedBuffer.getUnsignedInt(regMap, getMemoryAddress(address));
     }
+
+    public void write16(int address, int value) {
+        UnsignedBuffer.putUnsignedShort(regMap, getMemoryAddress(address), value);
+        if (Debug.logIOREGS) {
+            DCemu.logger.log(LogUtil.IOREGS, "write16 " + Sh4RegsNames.getName(address) + " value = 0x" + Integer.toHexString((int) (value)));
+        }
+    }
+
     public void write32(int address, int value) {
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(address), value);
         if (Debug.logIOREGS) {

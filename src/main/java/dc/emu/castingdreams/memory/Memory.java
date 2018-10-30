@@ -38,12 +38,21 @@ public class Memory {
         return UnsignedBuffer.getUnsignedInt(bios, address & 0x1fffffff);
     }
     
+    public void write16(int address,int value)
+    {
+        if(address >= 0xe0000000 && address<= 0xffffffff)//map SH4 memory mapped registers
+        {
+            DCemu.sh4regs.write16(address,value);
+        }
+        System.out.println("write16 " + Integer.toHexString(address ) + " " + Integer.toHexString(value));
+    }
+    
     public void write32(int address,int value)
     {
         if(address >= 0xe0000000 && address<= 0xffffffff)//map SH4 memory mapped registers
         {
             DCemu.sh4regs.write32(address,value);
         }
-        System.out.println(Integer.toHexString(address ) + " " + Integer.toHexString(value));
+        System.out.println("write32 " + Integer.toHexString(address ) + " " + Integer.toHexString(value));
     }
 }
