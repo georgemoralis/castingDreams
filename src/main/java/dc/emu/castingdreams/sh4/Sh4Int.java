@@ -2265,11 +2265,19 @@ public class Sh4Int {
     }
 
     private void PREF(int code) {
+        int n = RN(code);
+        if (registers[n] >= 0xe0000000 && registers[n] <= 0xeffffffc) {
+            Disassembler dis = new Disassembler();
+            System.out.println("Unsupported pref sq write?");
+            System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
+            dumpRegisters();
+            unimplemented = true;
+        }
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-        unimplemented=true;
+        unimplemented = true;
     }
 
     private void SETS(int code) {
