@@ -2,6 +2,9 @@ package dc.emu.castingdreams.sh4;
 
 import dc.emu.castingdreams.DCemu;
 import static dc.emu.castingdreams.sh4.Sh4Constants.*;
+import static dc.emu.castingdreams.sh4.Sh4RegsConstants.CCR;
+import static dc.emu.castingdreams.sh4.Sh4RegsConstants.MMUCR;
+import dc.emu.castingdreams.util.DCUtil;
 
 /**
  *
@@ -1055,21 +1058,32 @@ public class Sh4Int {
 				fpscr & F_FPSCR_PR ? "PR" : "  ",
 				fpscr & F_FPSCR_DN ? "DN" : "  ",
 				bits(fpscr, 1, 0));
-		}
-		if(i==4)
-		{
-			//printf("MMUCR: %08X", CCNREG(MMUCR));
-			int mmucr = CCNREG(MMUCR);
-			printf("MMUCR: [LRUI=%02X URB=%02X URC=%02X %s %s %s %s]",
-				bits(mmucr, 31, 26),
-				bits(mmucr, 23, 18),
-				bits(mmucr, 15, 10),
-				bits(mmucr, 9, 9) ? "SQMD" : "    ",
-				bits(mmucr, 8, 8) ? "SV" : "  ",
-				bits(mmucr, 2, 2) ? "TI" : "  ",
-				bits(mmucr, 0, 0) ? "AT" : "  ");
-		}
-		if(i==6)
+		}*/
+            if (i == 2) {
+                int ccr = (int) DCemu.sh4regs.read32(CCR);
+                System.out.print(String.format("CCR: [%s %s %s %s %s %s %s %s %s]",
+                        DCUtil.bitExtracted(ccr, 15, 15) != 0 ? "IIX" : "    ",
+                        DCUtil.bitExtracted(ccr, 11, 11) != 0 ? "ICI" : "    ",
+                        DCUtil.bitExtracted(ccr, 8, 8) != 0 ? "ICE" : "  ",
+                        DCUtil.bitExtracted(ccr, 7, 7) != 0 ? "OIX" : "  ",
+                        DCUtil.bitExtracted(ccr, 5, 5) != 0 ? "ORA" : "  ",
+                        DCUtil.bitExtracted(ccr, 3, 3) != 0 ? "OCI" : "  ",
+                        DCUtil.bitExtracted(ccr, 2, 2) != 0 ? "CB" : "  ",
+                        DCUtil.bitExtracted(ccr, 1, 1) != 0 ? "WT" : "  ",
+                        DCUtil.bitExtracted(ccr, 0, 0) != 0 ? "OCE" : "  "));
+            }
+            if (i == 4) {
+                int mmucr = (int) DCemu.sh4regs.read32(MMUCR);
+                System.out.print(String.format("MMUCR: [LRUI=%02X URB=%02X URC=%02X %s %s %s %s]",
+                        DCUtil.bitExtracted(mmucr, 31, 26),
+                        DCUtil.bitExtracted(mmucr, 23, 18),
+                        DCUtil.bitExtracted(mmucr, 15, 10),
+                        DCUtil.bitExtracted(mmucr, 9, 9) != 0 ? "SQMD" : "    ",
+                        DCUtil.bitExtracted(mmucr, 8, 8) != 0 ? "SV" : "  ",
+                        DCUtil.bitExtracted(mmucr, 2, 2) != 0 ? "TI" : "  ",
+                        DCUtil.bitExtracted(mmucr, 0, 0) != 0 ? "AT" : "  "));
+            }
+            /*if(i==6)
 		{
 			printf("PTEH: %08X  PTEL: %08X PTEA: %02X",
 				*((Dword*)(cpu->ccnRegs+PTEH)),
