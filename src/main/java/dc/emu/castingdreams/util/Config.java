@@ -22,12 +22,14 @@ public class Config {
 
     //properties
     public String biosPath;
+    public String ipbinPath;
 
     public Config() {
         file = new File("castingDreams.ini");
         configuration = new Properties();
         if (!file.exists()) {
             write("bios_path", "dc_boot.bin");
+            write("ipbin_path", "ip.bin");
         }
     }
 
@@ -47,6 +49,7 @@ public class Config {
         }
         //read values
         biosPath = configuration.getProperty("bios_path");
+        ipbinPath = configuration.getProperty("ipbin_path");
         return true;
     }
 
@@ -71,5 +74,9 @@ public class Config {
 
     public String getBiosPath() {
         return biosPath;
+    }
+
+    public String getIpBinPath() {
+        return ipbinPath;
     }
 }

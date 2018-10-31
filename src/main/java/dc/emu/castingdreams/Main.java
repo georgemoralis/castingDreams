@@ -13,9 +13,15 @@ public class Main {
             System.out.println("error loading configuration file Exiting...");
             return;
         }
-        if (!DCemu.loader.loadBinFile(DCemu.config.getBiosPath(), DCemu.memory.bios, 0, 0)) {
+        System.out.println(Integer.toHexString(0x8c008000 & 0x1fffffff));
+        /*if (!DCemu.loader.loadBinFile(DCemu.config.getBiosPath(), DCemu.memory.bios, 0, 0)) {
+            System.out.println("error loading bios into memory");
+        }*/
+        
+        if (!DCemu.loader.loadBinFile(DCemu.config.getIpBinPath(), DCemu.memory.ram, (0x8c008000 & 0x00ffffff), 0)) {
             System.out.println("error loading bios into memory");
         }
+        DCemu.sh4cpu.pc=0x8c008300;//Ip.bin start address (1stbin starts at 0x8c010000)
         DCemu.sh4cpu.run();
         /*
         int pc = 0xA0000000; //fake program counter address

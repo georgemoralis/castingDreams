@@ -1,7 +1,13 @@
+31/10/2018
+==========
+-intial value of register[15] based on kallistos
+-Implemented a few more opcodes. Now i reach an infinitive loop while trying to read from addresses 8c00e016, 8c00e018
+
 30/10/2018
 ==========
 -More opcodes , SH-4 mapped registers. Now we reach bios up to pc=A0000042
 -dummy pref instruction implementation
+-Some intial work on loading IP.bin (loads to ram now)
 
 29/10/2018
 ==========
