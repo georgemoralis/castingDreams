@@ -6,9 +6,9 @@ package dc.emu.castingdreams.util;
  */
 public class DCUtil {
 
-    // Function to extract k bits from p position 
-    // and returns the extracted value as integer 
-    public static int bitExtracted(int number, int k, int p) {
-        return (((1 << k) - 1) & (number >> (p - 1)));
+    public static int bitExtracted(int val, int hi, int lo) {
+        int ans = val << (31 - hi);
+        ans = ans >>> (31 - hi + lo);
+        return ans;
     }
 }

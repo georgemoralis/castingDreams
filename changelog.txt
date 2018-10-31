@@ -3,6 +3,7 @@
 -intial value of register[15] based on kallistos
 -Implemented a few more opcodes. Now i reach an infinitive loop while trying to read from addresses 8c00e016, 8c00e018
 -Added MMUCR,CCR to dumpRegisters function
+-Fixed extractbits util 
 
 30/10/2018
 ==========
