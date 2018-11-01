@@ -18,7 +18,7 @@ public class Main {
             System.out.println("error loading bios into memory");
         }*/
         
-        if (!DCemu.loader.loadBinFile(DCemu.config.getIpBinPath(), DCemu.memory.ram, (0x8c008000 & 0x00ffffff), 0)) {
+        if (!DCemu.loader.loadBinFile(DCemu.config.getIpBinPath(), DCemu.memmap.ram, (0x8c008000 & 0x00ffffff), 0)) {
             System.out.println("error loading bios into memory");
         }
         DCemu.sh4cpu.pc=0x8c008300;//Ip.bin start address (1stbin starts at 0x8c010000)

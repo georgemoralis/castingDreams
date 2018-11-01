@@ -1,3 +1,7 @@
+01/10/2018
+==========
+-Added memmap class and move memory accesses there
+
 31/10/2018
 ==========
 -intial value of register[15] based on kallistos
