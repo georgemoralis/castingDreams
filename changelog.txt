@@ -1,6 +1,7 @@
 01/10/2018
 ==========
 -Added memmap class and move memory accesses there
+-Made write32 to store long value
 
 31/10/2018
 ==========

@@ -61,10 +61,10 @@ public class Sh4Regs {
         }
     }
 
-    public void write32(int address, int value) {
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(address), value);
+    public void write32(int address, long value) {
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(address), value& 0xffffffffL);
         if (Debug.logIOREGS) {
-            DCemu.logger.log(LogUtil.IOREGS, "write32 " + Sh4RegsNames.getName(address) + " value = 0x" + Integer.toHexString((int) (value)));
+            DCemu.logger.log(LogUtil.IOREGS, "write32 " + Sh4RegsNames.getName(address) + " value = 0x" + Long.toHexString((value& 0xffffffffL)));
         }
     }
 }

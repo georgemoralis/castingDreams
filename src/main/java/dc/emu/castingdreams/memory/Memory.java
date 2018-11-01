@@ -57,7 +57,7 @@ public class Memory {
         DCemu.memmap.mem_write16(address, value);
     }
 
-    public void write32(int address, int value) {
+    public void write32(int address, long value) {
         VirtMemArea virt_area = sh4GetMemoryArea(address);
         switch (virt_area) {
             case SH4_AREA_P0:
