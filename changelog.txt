@@ -2,6 +2,7 @@
 ==========
 -Added memmap class and move memory accesses there
 -Made write32 to store long value
+-Added virtual mem to all read/writes
 
 31/10/2018
 ==========
