@@ -2,6 +2,7 @@ package dc.emu.castingdreams.sh4;
 
 import dc.emu.castingdreams.DCemu;
 import dc.emu.castingdreams.Debug;
+import static dc.emu.castingdreams.sh4.Sh4RegsConstants.PDTRA;
 import dc.emu.castingdreams.util.LogUtil;
 import dc.emu.castingdreams.util.UnsignedBuffer;
 import java.nio.ByteBuffer;
@@ -59,7 +60,11 @@ public class Sh4Regs {
     }
 
     public int read16(int address) {
-        System.out.println(Integer.toHexString(address));
+        switch (address) {
+            case PDTRA:
+                System.out.println("READING PDTRA REGISTER!!!");//todo better support for that
+                return UnsignedBuffer.getUnsignedShort(regMap, getMemoryAddress(Sh4RegsConstants.PDTRA));
+        }
         if (Debug.logIOREGS) {
             DCemu.logger.log(LogUtil.IOREGS, "read16  " + Sh4RegsNames.getName(address));
         }

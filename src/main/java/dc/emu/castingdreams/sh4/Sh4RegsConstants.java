@@ -21,6 +21,8 @@ public class Sh4RegsConstants {
     public static final int BCR2 = 0xff800004;
     public static final int WCR1 = 0xff800008;
     public static final int WCR2 = 0xff80000c;
+    public static final int PDTRA = 0xff800030;
+    public static final int PCTRA = 0xff80002c;
     /* interrupt controller */
     public static final int IPRA = 0xffd00004;
     public static final int IPRB = 0xffd00008;
