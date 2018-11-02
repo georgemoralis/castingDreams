@@ -2,6 +2,7 @@
 ==========
 -fixed bug in JSR instruction 
 -Added TOCR mapped register
+-More work now we reach reading from PDTRA register
 
 01/10/2018
 ==========

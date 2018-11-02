@@ -26,7 +26,33 @@ public class Memory {
     }
 
     public int read8(int address) {
-        throw new UnsupportedOperationException("Unimplemented");
+        VirtMemArea virt_area = sh4GetMemoryArea(address);
+        switch (virt_area) {
+            case SH4_AREA_P0:
+            case SH4_AREA_P3:
+                if ((DCemu.sh4regs.read32(MMUCR) & SH4_MMUCR_AT_MASK) != 0) {
+                    throw new UnsupportedOperationException("Unsupported MMU");
+                } else {
+                    if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
+                        // DCemu.sh4cpu.dumpRegisters();
+                        System.out.println("Unsupported ORA CACHE");
+                    }
+                }
+                return DCemu.memmap.mem_read8(address);
+            case SH4_AREA_P1:
+                return DCemu.memmap.mem_read8(address);
+            case SH4_AREA_P2:
+                return DCemu.memmap.mem_read8(address);
+            case SH4_AREA_P4:
+                if (address >= 0xe0000000 && address <= 0xffffffff)//map SH4 memory mapped registers
+                {
+                    return DCemu.sh4regs.read8(address);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Error");
+        }
+        throw new UnsupportedOperationException("Error");
     }
 
     public int read16(int address) {
@@ -199,6 +225,6 @@ public class Memory {
                 break;
             default:
                 throw new UnsupportedOperationException("Unimplemented");
-        }      
+        }
     }
 }

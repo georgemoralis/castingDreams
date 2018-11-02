@@ -992,7 +992,7 @@ public class Sh4Int {
                         return 0;
                 }
         }
-       // Disassembler dis = new Disassembler();
+        // Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, opcode, dis.disasm(pc, opcode)));
         dumpRegisters();
@@ -1491,7 +1491,7 @@ public class Sh4Int {
     }
 
     /* JSR @Rn */
-    private void JSR(int code) {  
+    private void JSR(int code) {
         int n = RN(code);
         pr = pc + 4;
         int target = registers[n];
@@ -1503,7 +1503,7 @@ public class Sh4Int {
     /* LDS.L @Rm+,PR */
     private void LDSMPR(int code) {
         int m = RN(code);
-        pr = (int) (DCemu.memory.read32(registers[m]) );
+        pr = (int) (DCemu.memory.read32(registers[m]));
 
         registers[m] += 4;
 
@@ -1541,6 +1541,90 @@ public class Sh4Int {
         pc += 2;
     }
 
+    /* MOV.B @Rm,Rn */
+    private void MOVBL(int code) { //recheck!
+        int m = RM(code);
+        int n = RN(code);
+        byte c;
+
+        c = (byte) (DCemu.memory.read8(registers[m]) & 0xFF);
+
+        registers[n] = (int) c;
+
+        cycles--;
+        pc += 2;
+    }
+
+    /* AND #imm,R0 */
+    private void ANDI(int code) {
+        int i = ((code >> 0) & 0xff);
+        registers[0] &= i;
+        cycles--;
+        pc += 2;
+    }
+
+    /* MOV.W Rm,@Rn */
+    private void MOVWS(int code) {
+        int m = RM(code);
+        int n = RN(code);
+
+        DCemu.memory.write16(registers[n], registers[m]);
+
+        cycles--;
+        pc += 2;
+    }
+
+    /* STC SR,Rn : Privileged */
+    private void STCSR(int code) {
+        //TODO check if it is in privileged mode else we should raise illegal instruction exception
+        int n = RN(code);
+
+        registers[n] = sr;
+
+        cycles -= 2;
+        pc += 2;
+    }
+
+    /* MOV.W @(disp,PC),Rn */
+    private void MOVWI(int code) {
+        int d = (code & 0xff);
+        int n = ((code >> 8) & 0x0f);
+
+        registers[n] = DCemu.memory.read16(pc + 4 + (d << 1));
+
+        if ((registers[n] & 0x8000) == 0) {
+            registers[n] &= 0x0000FFFF;
+        } else {
+            registers[n] |= 0xFFFF0000;
+        }
+
+        cycles--;
+        pc += 2;
+    }
+
+    /* AND Rm,Rn */
+    private void AND(int code) {
+        int m = RM(code);
+        int n = RN(code);
+
+        registers[n] &= registers[m];
+
+        cycles--;
+        pc += 2;
+    }
+
+    /* MOV.W @(disp,Rm),R0 */
+    private void MOVWL4(int code) {
+        int d = ((code >> 0) & 0x0f);
+        int m = RM(code);
+
+        short w = (short) DCemu.memory.read16(registers[m] + (d << 1));
+        registers[0] = (int) w;
+
+        cycles--;
+        pc += 2;
+    }
+
     /**
      *
      *
@@ -1552,27 +1636,6 @@ public class Sh4Int {
     private void NI(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("illegal instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void MOVWI(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void MOVWS(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void MOVBL(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
     }
@@ -1628,13 +1691,6 @@ public class Sh4Int {
     }
 
     private void MOVBL4(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void MOVWL4(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
@@ -1975,20 +2031,6 @@ public class Sh4Int {
         dumpRegisters();
     }
 
-    private void AND(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
-    private void ANDI(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-    }
-
     private void ANDM(int code) {
         Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
@@ -2189,11 +2231,24 @@ public class Sh4Int {
         dumpRegisters();
     }
 
+    /* LDC Rm,SR : Privileged */
     private void LDCSR(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+        int m = RN(code);
+
+        int rb = (sr & SR_RB_MASK);
+
+        sr = registers[m] & 0x700083f3;
+
+        if (((sr & SR_RB_MASK) != rb) && ((sr & SR_MD_MASK) != 0)) {
+            //TODO must switch grp banks!!!
+            Disassembler dis = new Disassembler();
+            System.out.println("Unsupported instruction");
+            System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
+            dumpRegisters();
+        }
+        cycles -= 4;
+        pc += 2;
+
     }
 
     private void LDCGBR(int code) {
@@ -2395,14 +2450,6 @@ public class Sh4Int {
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
         dumpRegisters();
-    }
-
-    private void STCSR(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-        unimplemented = true;
     }
 
     private void STCGBR(int code) {

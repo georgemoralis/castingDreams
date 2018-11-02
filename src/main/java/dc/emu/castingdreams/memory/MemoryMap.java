@@ -22,7 +22,9 @@ public class MemoryMap {
         bios = ByteBuffer.allocate(MemoryConstants.biosSize);
         bios.order(ByteOrder.LITTLE_ENDIAN);
     }
-
+    public int mem_read8(int address) {
+        throw new UnsupportedOperationException("mem_read8");
+    }
     public int mem_read16(int address) {
         System.out.println("read16 " + Integer.toHexString(address));       
         int addr= address & 0x1fffffff;

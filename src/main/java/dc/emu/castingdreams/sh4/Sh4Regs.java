@@ -30,26 +30,36 @@ public class Sh4Regs {
     }
 
     public void hardReset() {
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.EXPEVT), 0);
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.MMUCR), 0);
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.CCR), 0);
         UnsignedBuffer.putUnsignedShort(regMap, getMemoryAddress(Sh4RegsConstants.BCR2), 0x3ffc);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR1), 0x77777777);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR2), 0xfffeefff);
-        UnsignedBuffer.putUnsignedByte(regMap, getMemoryAddress(Sh4RegsConstants.TOCR), 0);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCOR0), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCNT0), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCOR1), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCNT1), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCOR2), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCNT2), 0xffffffff);
     }
 
     public void manualReset() {
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.EXPEVT), 0x20);
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.MMUCR), 0);
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.CCR), 0);
-        UnsignedBuffer.putUnsignedShort(regMap, getMemoryAddress(Sh4RegsConstants.BCR2), 0);
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR1), 0);
-        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR2), 0);
-        UnsignedBuffer.putUnsignedByte(regMap, getMemoryAddress(Sh4RegsConstants.TOCR), 0);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCOR0), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCNT0), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCOR1), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCNT1), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCOR2), 0xffffffff);
+        UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.TCNT2), 0xffffffff);
+    }
+
+    public int read8(int address) {
+        if (Debug.logIOREGS) {
+            DCemu.logger.log(LogUtil.IOREGS, "read8  " + Sh4RegsNames.getName(address));
+        }
+        return UnsignedBuffer.getUnsignedByte(regMap, getMemoryAddress(address));
     }
 
     public int read16(int address) {
+        System.out.println(Integer.toHexString(address));
         if (Debug.logIOREGS) {
             DCemu.logger.log(LogUtil.IOREGS, "read16  " + Sh4RegsNames.getName(address));
         }
