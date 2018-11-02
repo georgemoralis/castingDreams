@@ -40,7 +40,6 @@ public class MemoryMap {
         if (addr >= ADDR_RAM_FIRST && addr <= ADDR_RAM_LAST) {
             return UnsignedBuffer.getUnsignedInt(ram, address & 0x00ffffff);
         }
-        System.out.println(Integer.toHexString(address));
         throw new UnsupportedOperationException("mem_read32");
     }
 
