@@ -19,8 +19,10 @@ public class Memory {
     /**
      * memory class atm is a big hack need a lot more work
      */
-    public Memory() {
+    ByteBuffer CacheArea;
 
+    public Memory() {
+        CacheArea = ByteBuffer.allocate(32 * 1024);
     }
 
     public int read8(int address) {
@@ -36,19 +38,15 @@ public class Memory {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
                     if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
-                       // DCemu.sh4cpu.dumpRegisters();
+                        // DCemu.sh4cpu.dumpRegisters();
                         System.out.println("Unsupported ORA CACHE");
                     }
                 }
-                //DCemu.sh4cpu.dumpRegisters();
-                System.out.println("P0-P3 read");
-                break;
+                return DCemu.memmap.mem_read16(address);
             case SH4_AREA_P1:
-                System.out.println("P1 read");
-                break;
+                return DCemu.memmap.mem_read16(address);
             case SH4_AREA_P2:
-                System.out.println("P2 read");
-                break;
+                return DCemu.memmap.mem_read16(address);
             case SH4_AREA_P4:
                 if (address >= 0xe0000000 && address <= 0xffffffff)//map SH4 memory mapped registers
                 {
@@ -56,9 +54,9 @@ public class Memory {
                 }
                 break;
             default:
-                break;
+                throw new UnsupportedOperationException("Error");
         }
-        return DCemu.memmap.mem_read16(address);
+        throw new UnsupportedOperationException("Error");
     }
 
     public long read32(int address) {
@@ -70,19 +68,19 @@ public class Memory {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
                     if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
-                        //DCemu.sh4cpu.dumpRegisters();
-                        System.out.println("Unsupported ORA CACHE");
+                        System.out.println("cache read32 0x" + Integer.toHexString(address));
+                        if ((DCemu.sh4regs.read32(CCR) & 0x80) != 0) {
+                            return UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)) >>> 2);
+                        } else {
+                            return UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)) >>> 2);
+                        }
                     }
                 }
-                //DCemu.sh4cpu.dumpRegisters();
-                System.out.println("P0-P3 read");
-                break;
+                return DCemu.memmap.mem_read32(address);
             case SH4_AREA_P1:
-                System.out.println("P1 read");
-                break;
+                return DCemu.memmap.mem_read32(address);
             case SH4_AREA_P2:
-                System.out.println("P2 read");
-                break;
+                return DCemu.memmap.mem_read32(address);
             case SH4_AREA_P4:
                 if (address >= 0xe0000000 && address <= 0xffffffff)//map SH4 memory mapped registers
                 {
@@ -90,9 +88,9 @@ public class Memory {
                 }
                 break;
             default:
-                break;
+                throw new UnsupportedOperationException("Error");
         }
-        return DCemu.memmap.mem_read32(address);
+        throw new UnsupportedOperationException("Error");
     }
 
     public void write8(int address, int value) {
@@ -174,18 +172,23 @@ public class Memory {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
                     if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
-                        //DCemu.sh4cpu.dumpRegisters();
-                        System.out.println("Unsupported ORA CACHE");
+                        System.out.println("cache write32 0x" + Integer.toHexString(address));
+                        if ((DCemu.sh4regs.read32(CCR) & 0x80) != 0) {
+                            UnsignedBuffer.putUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)) >>> 2, value);
+                            return;
+                        } else {
+                            UnsignedBuffer.putUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)) >>> 2, value);
+                            return;
+                        }
                     }
                 }
-                //DCemu.sh4cpu.dumpRegisters();
-                System.out.println("P0-P3 write");
+                DCemu.memmap.mem_write32(address, value);
                 break;
             case SH4_AREA_P1:
-                System.out.println("P1 write");
+                DCemu.memmap.mem_write32(address, value);
                 break;
             case SH4_AREA_P2:
-                System.out.println("P2 write");
+                DCemu.memmap.mem_write32(address, value);
                 break;
             case SH4_AREA_P4:
                 if (address >= 0xe0000000 && address <= 0xffffffff)//map SH4 memory mapped registers
@@ -195,9 +198,7 @@ public class Memory {
                 }
                 break;
             default:
-                break;
-        }
-
-        DCemu.memmap.mem_write32(address, value);
+                throw new UnsupportedOperationException("Unimplemented");
+        }      
     }
 }

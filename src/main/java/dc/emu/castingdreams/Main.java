@@ -13,7 +13,6 @@ public class Main {
             System.out.println("error loading configuration file Exiting...");
             return;
         }
-        System.out.println(Integer.toHexString(0x8c008000 & 0x1fffffff));
         /*if (!DCemu.loader.loadBinFile(DCemu.config.getBiosPath(), DCemu.memory.bios, 0, 0)) {
             System.out.println("error loading bios into memory");
         }*/

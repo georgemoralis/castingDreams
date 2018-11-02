@@ -36,6 +36,7 @@ public class Sh4Regs {
         UnsignedBuffer.putUnsignedShort(regMap, getMemoryAddress(Sh4RegsConstants.BCR2), 0x3ffc);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR1), 0x77777777);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR2), 0xfffeefff);
+        UnsignedBuffer.putUnsignedByte(regMap, getMemoryAddress(Sh4RegsConstants.TOCR), 0);
     }
 
     public void manualReset() {
@@ -45,9 +46,13 @@ public class Sh4Regs {
         UnsignedBuffer.putUnsignedShort(regMap, getMemoryAddress(Sh4RegsConstants.BCR2), 0);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR1), 0);
         UnsignedBuffer.putUnsignedInt(regMap, getMemoryAddress(Sh4RegsConstants.WCR2), 0);
+        UnsignedBuffer.putUnsignedByte(regMap, getMemoryAddress(Sh4RegsConstants.TOCR), 0);
     }
 
     public int read16(int address) {
+        if (Debug.logIOREGS) {
+            DCemu.logger.log(LogUtil.IOREGS, "read16  " + Sh4RegsNames.getName(address));
+        }
         throw new UnsupportedOperationException("Unimplemented");
     }
 
@@ -59,7 +64,10 @@ public class Sh4Regs {
     }
 
     public void write8(int address, int value) {
-        throw new UnsupportedOperationException("Unimplemented");
+        UnsignedBuffer.putUnsignedByte(regMap, getMemoryAddress(address), value);
+        if (Debug.logIOREGS) {
+            DCemu.logger.log(LogUtil.IOREGS, "write8 " + Sh4RegsNames.getName(address) + " value = 0x" + Integer.toHexString((int) (value)));
+        }
     }
 
     public void write16(int address, int value) {

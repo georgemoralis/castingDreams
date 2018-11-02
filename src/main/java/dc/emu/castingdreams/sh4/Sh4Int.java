@@ -52,6 +52,7 @@ public class Sh4Int {
     }
 
     private int decode(int opcode) {
+        Disassembler dis = new Disassembler();
         switch ((opcode >>> 12) & 0xf) {
             case 0:
                 switch ((opcode >>> 0) & 0xf) {
@@ -991,7 +992,7 @@ public class Sh4Int {
                         return 0;
                 }
         }
-        Disassembler dis = new Disassembler();
+       // Disassembler dis = new Disassembler();
         System.out.println("Unsupported instruction");
         System.out.println(String.format("0x%08x: %04x %s", pc, opcode, dis.disasm(pc, opcode)));
         dumpRegisters();
@@ -1490,19 +1491,19 @@ public class Sh4Int {
     }
 
     /* JSR @Rn */
-    private void JSR(int code) {
+    private void JSR(int code) {  
         int n = RN(code);
-        pr = pr + 4;
+        pr = pc + 4;
         int target = registers[n];
-        decode(DCemu.memory.read16(pr + 2));
-        pr = target;
+        decode(DCemu.memory.read16(pc + 2));
+        pc = target;
         cycles -= 2;
     }
 
     /* LDS.L @Rm+,PR */
     private void LDSMPR(int code) {
         int m = RN(code);
-        pr = (int) DCemu.memory.read32(registers[m]);
+        pr = (int) (DCemu.memory.read32(registers[m]) );
 
         registers[m] += 4;
 

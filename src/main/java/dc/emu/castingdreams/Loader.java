@@ -33,7 +33,7 @@ public class Loader {
             System.err.println("Error mapping file" + fileName);
             return false;
         }
-        System.out.println("Writing to Address 0x" + Integer.toHexString(address));
+        System.out.println("Writing from Address 0x" + Integer.toHexString(address) + " to 0x" + Integer.toHexString(address+(int)binary.length()-1));
 
         bin.rewind();
         mem.position(address);
