@@ -1,3 +1,7 @@
+06/11/2018
+==========
+-Reduced mmucr,ccr reads in memory
+
 02/10/2018
 ==========
 -fixed bug in JSR instruction 

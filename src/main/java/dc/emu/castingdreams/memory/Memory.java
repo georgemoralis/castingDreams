@@ -30,10 +30,12 @@ public class Memory {
         switch (virt_area) {
             case SH4_AREA_P0:
             case SH4_AREA_P3:
-                if ((DCemu.sh4regs.read32(MMUCR) & SH4_MMUCR_AT_MASK) != 0) {
+                long mmucr = DCemu.sh4regs.read32(MMUCR);
+                if ((mmucr & SH4_MMUCR_AT_MASK) != 0) {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
-                    if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
+                    long ccr = DCemu.sh4regs.read32(CCR);
+                    if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
                         // DCemu.sh4cpu.dumpRegisters();
                         System.out.println("Unsupported ORA CACHE");
                     }
@@ -60,10 +62,12 @@ public class Memory {
         switch (virt_area) {
             case SH4_AREA_P0:
             case SH4_AREA_P3:
-                if ((DCemu.sh4regs.read32(MMUCR) & SH4_MMUCR_AT_MASK) != 0) {
+                long mmucr = DCemu.sh4regs.read32(MMUCR);
+                if ((mmucr & SH4_MMUCR_AT_MASK) != 0) {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
-                    if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
+                    long ccr = DCemu.sh4regs.read32(CCR);
+                    if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
                         // DCemu.sh4cpu.dumpRegisters();
                         System.out.println("Unsupported ORA CACHE");
                     }
@@ -90,12 +94,14 @@ public class Memory {
         switch (virt_area) {
             case SH4_AREA_P0:
             case SH4_AREA_P3:
-                if ((DCemu.sh4regs.read32(MMUCR) & SH4_MMUCR_AT_MASK) != 0) {
+                long mmucr = DCemu.sh4regs.read32(MMUCR);
+                if ((mmucr & SH4_MMUCR_AT_MASK) != 0) {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
-                    if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
+                    long ccr = DCemu.sh4regs.read32(CCR);
+                    if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
                         System.out.println("cache read32 0x" + Integer.toHexString(address));
-                        if ((DCemu.sh4regs.read32(CCR) & 0x80) != 0) {
+                        if ((ccr & 0x80) != 0) {
                             return UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)) >>> 2);
                         } else {
                             return UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)) >>> 2);
@@ -124,10 +130,12 @@ public class Memory {
         switch (virt_area) {
             case SH4_AREA_P0:
             case SH4_AREA_P3:
-                if ((DCemu.sh4regs.read32(MMUCR) & SH4_MMUCR_AT_MASK) != 0) {
+                long mmucr = DCemu.sh4regs.read32(MMUCR);
+                if ((mmucr & SH4_MMUCR_AT_MASK) != 0) {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
-                    if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
+                    long ccr = DCemu.sh4regs.read32(CCR);
+                    if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
                         //DCemu.sh4cpu.dumpRegisters();
                         System.out.println("Unsupported ORA CACHE");
                     }
@@ -159,10 +167,12 @@ public class Memory {
         switch (virt_area) {
             case SH4_AREA_P0:
             case SH4_AREA_P3:
-                if ((DCemu.sh4regs.read32(MMUCR) & SH4_MMUCR_AT_MASK) != 0) {
+                long mmucr = DCemu.sh4regs.read32(MMUCR);
+                if ((mmucr & SH4_MMUCR_AT_MASK) != 0) {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
-                    if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
+                    long ccr = DCemu.sh4regs.read32(CCR);
+                    if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
                         //DCemu.sh4cpu.dumpRegisters();
                         System.out.println("Unsupported ORA CACHE");
                     }
@@ -194,12 +204,14 @@ public class Memory {
         switch (virt_area) {
             case SH4_AREA_P0:
             case SH4_AREA_P3:
-                if ((DCemu.sh4regs.read32(MMUCR) & SH4_MMUCR_AT_MASK) != 0) {
+                long mmucr = DCemu.sh4regs.read32(MMUCR);
+                if ((mmucr & SH4_MMUCR_AT_MASK) != 0) {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
-                    if (((DCemu.sh4regs.read32(CCR) & SH4_CCR_OCE_MASK) != 0) && ((DCemu.sh4regs.read32(CCR) & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
+                    long ccr = DCemu.sh4regs.read32(CCR);
+                    if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
                         System.out.println("cache write32 0x" + Integer.toHexString(address));
-                        if ((DCemu.sh4regs.read32(CCR) & 0x80) != 0) {
+                        if ((ccr & 0x80) != 0) {
                             UnsignedBuffer.putUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)) >>> 2, value);
                             return;
                         } else {
