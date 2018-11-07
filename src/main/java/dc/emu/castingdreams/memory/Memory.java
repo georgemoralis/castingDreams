@@ -1,11 +1,13 @@
 package dc.emu.castingdreams.memory;
 
 import dc.emu.castingdreams.DCemu;
+import dc.emu.castingdreams.Debug;
 import static dc.emu.castingdreams.memory.MemoryConstants.*;
 import static dc.emu.castingdreams.memory.VirtMemArea.*;
 import static dc.emu.castingdreams.sh4.Sh4Constants.*;
 import static dc.emu.castingdreams.sh4.Sh4RegsConstants.CCR;
 import static dc.emu.castingdreams.sh4.Sh4RegsConstants.MMUCR;
+import dc.emu.castingdreams.util.LogUtil;
 import dc.emu.castingdreams.util.UnsignedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -68,8 +70,11 @@ public class Memory {
                 } else {
                     long ccr = DCemu.sh4regs.read32(CCR);
                     if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
-                        // DCemu.sh4cpu.dumpRegisters();
-                        System.out.println("Unsupported ORA CACHE");
+                        if ((ccr & 0x80) != 0) {
+                            return UnsignedBuffer.getUnsignedShort(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)));
+                        } else {
+                            return UnsignedBuffer.getUnsignedShort(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)));
+                        }
                     }
                 }
                 return DCemu.memmap.mem_read16(address);
@@ -101,10 +106,21 @@ public class Memory {
                     long ccr = DCemu.sh4regs.read32(CCR);
                     if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
                         System.out.println("cache read32 0x" + Integer.toHexString(address));
+                        long read;
                         if ((ccr & 0x80) != 0) {
-                            return UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)) >>> 2);
+                            read = UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)));
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "1cache read32 from address 0x" + Integer.toHexString(address) + " 0x" + Long.toHexString(read));
+                            }
+                            System.out.println("1 " + Long.toHexString(read));
+                            return read;
                         } else {
-                            return UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)) >>> 2);
+                            read = UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)));
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "2cache read32 from address 0x" + Integer.toHexString(address) + " 0x" + Long.toHexString(read));
+                            }
+                            System.out.println("2 " + Long.toHexString(read));
+                            return read;
                         }
                     }
                 }
@@ -135,19 +151,30 @@ public class Memory {
                     throw new UnsupportedOperationException("Unsupported MMU");
                 } else {
                     long ccr = DCemu.sh4regs.read32(CCR);
+                    System.out.println("cache write8 0x" + Integer.toHexString(address));
                     if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
-                        //DCemu.sh4cpu.dumpRegisters();
-                        System.out.println("Unsupported ORA CACHE");
+                        if ((ccr & 0x80) != 0) {
+                            UnsignedBuffer.putUnsignedByte(CacheArea, ((address >> 13) & 0x1000) + (address & 0x0fff), value);
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "1cache write8 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL));
+                            }
+                            return;
+                        } else {
+                            UnsignedBuffer.putUnsignedByte(CacheArea, ((address >> 1) & 0x1000) + (address & 0x0fff), value);
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "2cache write8 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL));
+                            }
+                            return;
+                        }
                     }
                 }
-                //DCemu.sh4cpu.dumpRegisters();
-                System.out.println("P0-P3 write");
+                DCemu.memmap.mem_write8(address, value);
                 break;
             case SH4_AREA_P1:
-                System.out.println("P1 write");
+                DCemu.memmap.mem_write8(address, value);
                 break;
             case SH4_AREA_P2:
-                System.out.println("P2 write");
+                DCemu.memmap.mem_write8(address, value);
                 break;
             case SH4_AREA_P4:
                 if (address >= 0xe0000000 && address <= 0xffffffff)//map SH4 memory mapped registers
@@ -157,9 +184,8 @@ public class Memory {
                 }
                 break;
             default:
-                break;
+                throw new UnsupportedOperationException("Unimplemented");
         }
-        DCemu.memmap.mem_write8(address, value);
     }
 
     public void write16(int address, int value) {
@@ -173,18 +199,29 @@ public class Memory {
                 } else {
                     long ccr = DCemu.sh4regs.read32(CCR);
                     if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
-                        //DCemu.sh4cpu.dumpRegisters();
-                        System.out.println("Unsupported ORA CACHE");
+                        System.out.println("cache write16 0x" + Integer.toHexString(address));
+                        if ((ccr & 0x80) != 0) {
+                            UnsignedBuffer.putUnsignedShort(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)), value);
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "1cache write16 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL));
+                            }
+                            return;
+                        } else {
+                            UnsignedBuffer.putUnsignedShort(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)), value);
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "2cache write16 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL));
+                            }
+                            return;
+                        }
                     }
                 }
-                //DCemu.sh4cpu.dumpRegisters();
-                System.out.println("P0-P3 write");
+                DCemu.memmap.mem_write16(address, value);
                 break;
             case SH4_AREA_P1:
-                System.out.println("P1 write");
+                DCemu.memmap.mem_write16(address, value);
                 break;
             case SH4_AREA_P2:
-                System.out.println("P2 write");
+                DCemu.memmap.mem_write16(address, value);
                 break;
             case SH4_AREA_P4:
                 if (address >= 0xe0000000 && address <= 0xffffffff)//map SH4 memory mapped registers
@@ -194,9 +231,8 @@ public class Memory {
                 }
                 break;
             default:
-                break;
+                throw new UnsupportedOperationException("Unimplemented");
         }
-        DCemu.memmap.mem_write16(address, value);
     }
 
     public void write32(int address, long value) {
@@ -210,12 +246,19 @@ public class Memory {
                 } else {
                     long ccr = DCemu.sh4regs.read32(CCR);
                     if (((ccr & SH4_CCR_OCE_MASK) != 0) && ((ccr & SH4_CCR_ORA_MASK) != 0) && sh4_ocache_in_ram_area(address)) {
-                        System.out.println("cache write32 0x" + Integer.toHexString(address));
                         if ((ccr & 0x80) != 0) {
-                            UnsignedBuffer.putUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)) >>> 2, value);
+                            UnsignedBuffer.putUnsignedInt(CacheArea, (((address >> 13) & 0x1000) + (address & 0x0fff)), value);
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "1cache write32 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL));
+                            }
+                            System.out.println("1cache write32 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL));
                             return;
                         } else {
-                            UnsignedBuffer.putUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)) >>> 2, value);
+                            UnsignedBuffer.putUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)), value);
+                            if (Debug.logCache) {
+                                DCemu.logger.log(LogUtil.CACHE, "2cache write32 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL) + " real = " + Long.toHexString(UnsignedBuffer.getUnsignedInt(CacheArea, (((address >> 1) & 0x1000) + (address & 0x0fff)))));
+                            }
+                            System.out.println("2 cache write32 0x" + Integer.toHexString(address) + " value = " + Long.toHexString(value & 0xffffffffL));
                             return;
                         }
                     }

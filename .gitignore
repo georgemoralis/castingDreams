@@ -27,3 +27,5 @@ hs_err_pid*
 /serialLog.txt
 /ip.bin
 /castingDreams.ini
+/aicaregsLog.txt
+/cacheLog.txt

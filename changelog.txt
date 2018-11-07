@@ -1,3 +1,10 @@
+07/11/2018
+==========
+-added aicaRegs file for avctl register
+-fixed cache access and log them
+-added a few more instructions
+-Now we reach first PVR access
+
 06/11/2018
 ==========
 -Reduced mmucr,ccr reads in memory

@@ -9,14 +9,20 @@ import java.io.IOException;
 public class LogUtil {
 
     private FileWriter logRegs;/*Internal I/O register access*/
+    private FileWriter aicaRegs;/*AICA registers*/
     private FileWriter logSerialPort;
+    private FileWriter logCache;
 
     public final static int IOREGS = 0;
+    public final static int AICAREGS = 1;
+    public final static int CACHE = 2;
 
     public LogUtil() {
         try {
             logRegs = new FileWriter("ioregsLog.txt");
             logSerialPort = new FileWriter("serialLog.txt");
+            aicaRegs = new FileWriter("aicaregsLog.txt");
+            logCache = new FileWriter("cacheLog.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,6 +44,24 @@ public class LogUtil {
                     logRegs.write(str);
                     logRegs.write("\n");
                     logRegs.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case AICAREGS:
+                try {
+                    aicaRegs.write(str);
+                    aicaRegs.write("\n");
+                    aicaRegs.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case CACHE:
+                try {
+                    logCache.write(str);
+                    logCache.write("\n");
+                    logCache.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

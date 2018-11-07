@@ -6,4 +6,6 @@ package dc.emu.castingdreams;
  */
 public class Debug {
     public static final boolean logIOREGS=true;
+    public static final boolean logAICAREGS=true;
+    public static final boolean logCache=true;
 }

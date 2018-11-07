@@ -486,8 +486,7 @@ public class Disassembler {
                     case 8:
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
-                                //SHLL2(opcode);
-                                return String.format("???");
+                                return String.format("shll2 R%d",RN(opcode));
                             case 1:
                                 return String.format("shll8 R%d", RN(opcode));
                             case 2:

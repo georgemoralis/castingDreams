@@ -1,5 +1,6 @@
 package dc.emu.castingdreams;
 
+import dc.emu.castingdreams.hw.aica.AicaRegs;
 import dc.emu.castingdreams.memory.Memory;
 import dc.emu.castingdreams.memory.MemoryMap;
 import dc.emu.castingdreams.sh4.Sh4Int;
@@ -20,6 +21,7 @@ public class DCemu {
     public static Sh4Int sh4cpu;
     public static Sh4Regs sh4regs;
     public static MemoryMap memmap;
+    public static AicaRegs aicaregs;
 
     static {
         logger = new LogUtil();
@@ -29,5 +31,6 @@ public class DCemu {
         config = new Config();
         sh4regs = new Sh4Regs();
         sh4cpu = new Sh4Int();
+        aicaregs = new AicaRegs();
     }
 }

@@ -1358,6 +1358,7 @@ public class Sh4Int {
 
     /* LDS Rm,PR */
     private void LDSPR(int code) {
+        dumpRegisters();
         int m = RN(code);
         pr = registers[m];
         pc += 2;
@@ -1458,7 +1459,6 @@ public class Sh4Int {
             cycles--;
             pc += 2;
         }
-
     }
 
     /* MOV.B Rm,@Rn */
@@ -1502,6 +1502,7 @@ public class Sh4Int {
 
     /* LDS.L @Rm+,PR */
     private void LDSMPR(int code) {
+
         int m = RN(code);
         pr = (int) (DCemu.memory.read32(registers[m]));
 
@@ -1509,6 +1510,7 @@ public class Sh4Int {
 
         cycles -= 2;
         pc += 2;
+        dumpRegisters();
     }
 
     /* MOV.L Rm,@-Rn */
@@ -1684,10 +1686,13 @@ public class Sh4Int {
     }
 
     private void MOVBS4(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+        int d = ((code >> 0) & 0x0f);
+        int n = RM(code);
+
+        DCemu.memory.write8(registers[n] + (d << 0), (byte) registers[0]);
+
+        cycles--;
+        pc += 2;
     }
 
     private void MOVBL4(int code) {
@@ -2046,11 +2051,11 @@ public class Sh4Int {
     }
 
     private void OR(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-        unimplemented = true;
+        int m = RM(code);
+        int n = RN(code);
+        registers[n] |= registers[m];
+        cycles--;
+        pc += 2;
     }
 
     private void ORM(int code) {
@@ -2143,10 +2148,12 @@ public class Sh4Int {
     }
 
     private void SHLL2(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+        int n = RN(code);
+
+        registers[n] <<= 2;
+
+        cycles--;
+        pc += 2;
 
     }
 
