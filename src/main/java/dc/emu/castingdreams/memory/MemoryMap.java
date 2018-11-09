@@ -4,6 +4,8 @@ import dc.emu.castingdreams.DCemu;
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_AICA_FIRST;
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_AICA_LAST;
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_BIOS_LAST;
+import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_PVR2_CORE_FIRST;
+import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_PVR2_CORE_LAST;
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_RAM_FIRST;
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_RAM_LAST;
 import dc.emu.castingdreams.util.UnsignedBuffer;
@@ -53,6 +55,10 @@ public class MemoryMap {
         } else if (addr >= ADDR_AICA_FIRST && addr <= ADDR_AICA_LAST) {
             return DCemu.aicaregs.read32(addr);
         }
+        else if (addr >= ADDR_PVR2_CORE_FIRST && addr <= ADDR_PVR2_CORE_LAST)
+        {
+            return DCemu.pvr2cregs.read32(addr);
+        }
         System.out.println("read32 " + Integer.toHexString(addr));
         throw new UnsupportedOperationException("mem_read32");
     }
@@ -89,6 +95,7 @@ public class MemoryMap {
             DCemu.aicaregs.write32(addr,value);
             return;
         }
+        
        throw new UnsupportedOperationException("mem_write32");
     }
 }

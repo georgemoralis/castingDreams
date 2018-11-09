@@ -16,7 +16,7 @@ public class AicaRegs {
     public ByteBuffer aicaMap;
 
     public AicaRegs() {
-        aicaMap = ByteBuffer.allocate(0x8000000);
+        aicaMap = ByteBuffer.allocate(0x8000000);//todo reduce size
         aicaMap.order(ByteOrder.LITTLE_ENDIAN);
     }
 
