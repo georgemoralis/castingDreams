@@ -1,3 +1,7 @@
+12/11/2018
+==========
+-More dummy pvr2 registers. Now we reach interrupt controller
+
 09/11/2018
 ==========
 -added pvr id reg. Now we reach a05f8008 reg (softreset reg)

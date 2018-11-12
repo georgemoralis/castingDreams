@@ -106,8 +106,7 @@ public class Disassembler {
                         //MOVWS0(opcode);
                         return String.format("MOVWS0 ???");
                     case 6:
-                        //MOVLS0(opcode);
-                        return String.format("MOVLS0 ???");
+                        return String.format("mov.l R%d, @(%d, R%d)",RM(opcode),DISP(opcode),RN(opcode));
                     case 7:
                         //MULL(opcode);
                         return String.format("MULL ???");
@@ -642,8 +641,7 @@ public class Disassembler {
                         //NEG(opcode);
                         return String.format("???");
                     case 12:
-                        //EXTUB(opcode);
-                        return String.format("???");
+                        return String.format("extu.b R%d, R%d",RM(opcode),RN(opcode));
                     case 13:
                         //EXTUW(opcode);
                         return String.format("???");

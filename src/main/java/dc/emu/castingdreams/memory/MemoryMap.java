@@ -54,9 +54,7 @@ public class MemoryMap {
             return UnsignedBuffer.getUnsignedInt(ram, address & 0x00ffffff);
         } else if (addr >= ADDR_AICA_FIRST && addr <= ADDR_AICA_LAST) {
             return DCemu.aicaregs.read32(addr);
-        }
-        else if (addr >= ADDR_PVR2_CORE_FIRST && addr <= ADDR_PVR2_CORE_LAST)
-        {
+        } else if (addr >= ADDR_PVR2_CORE_FIRST && addr <= ADDR_PVR2_CORE_LAST) {
             return DCemu.pvr2cregs.read32(addr);
         }
         System.out.println("read32 " + Integer.toHexString(addr));
@@ -70,7 +68,7 @@ public class MemoryMap {
             UnsignedBuffer.putUnsignedByte(ram, address & 0x00ffffff, value);
             return;
         }
-       throw new UnsupportedOperationException("mem_write8");
+        throw new UnsupportedOperationException("mem_write8");
     }
 
     public void mem_write16(int address, int value) {
@@ -81,7 +79,7 @@ public class MemoryMap {
             UnsignedBuffer.putUnsignedShort(ram, address & 0x00ffffff, value);
             return;
         }
-       throw new UnsupportedOperationException("mem_write16");
+        throw new UnsupportedOperationException("mem_write16");
     }
 
     public void mem_write32(int address, long value) {
@@ -90,12 +88,14 @@ public class MemoryMap {
         if (addr >= ADDR_RAM_FIRST && addr <= ADDR_RAM_LAST) {
             UnsignedBuffer.putUnsignedInt(ram, address & 0x00ffffff, value);
             return;
-        }
-        else if (addr >= ADDR_AICA_FIRST && addr <= ADDR_AICA_LAST) {
-            DCemu.aicaregs.write32(addr,value);
+        } else if (addr >= ADDR_AICA_FIRST && addr <= ADDR_AICA_LAST) {
+            DCemu.aicaregs.write32(addr, value);
+            return;
+        } else if (addr >= ADDR_PVR2_CORE_FIRST && addr <= ADDR_PVR2_CORE_LAST) {
+            DCemu.pvr2cregs.write32(addr, value);
             return;
         }
-        
-       throw new UnsupportedOperationException("mem_write32");
+
+        throw new UnsupportedOperationException("mem_write32");
     }
 }

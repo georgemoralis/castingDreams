@@ -1717,10 +1717,13 @@ public class Sh4Int {
     }
 
     private void MOVLS0(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+        int m = RM(code);
+        int n = RN(code);
+
+         DCemu.memory.write32(registers[n] + registers[0], registers[m]);
+
+        cycles--;
+        pc += 2;
 
     }
 
@@ -1959,10 +1962,13 @@ public class Sh4Int {
     }
 
     private void EXTUB(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+        int m = RM(code);
+        int n = RN(code);
+
+        registers[n] = (registers[m] & 0x000000FF);
+
+        cycles--;
+        pc += 2;
     }
 
     private void EXTUW(int code) {
