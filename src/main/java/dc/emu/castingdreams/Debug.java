@@ -9,4 +9,5 @@ public class Debug {
     public static final boolean logAICAREGS=true;
     public static final boolean logCache=true;
     public static final boolean logPvr=true;
+    public static final boolean logSys=true;
 }

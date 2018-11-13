@@ -1720,7 +1720,7 @@ public class Sh4Int {
         int m = RM(code);
         int n = RN(code);
 
-         DCemu.memory.write32(registers[n] + registers[0], registers[m]);
+        DCemu.memory.write32(registers[n] + registers[0], registers[m]);
 
         cycles--;
         pc += 2;
@@ -1832,11 +1832,13 @@ public class Sh4Int {
     }
 
     private void ADD(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
-        unimplemented = true;
+        int m = RM(code);
+        int n = RN(code);
+
+        registers[n] += registers[m];
+
+        cycles--;
+        pc += 2;
     }
 
     private void ADDC(int code) {
@@ -2187,10 +2189,22 @@ public class Sh4Int {
     }
 
     private void BT(int code) {
-        Disassembler dis = new Disassembler();
-        System.out.println("Unsupported instruction");
-        System.out.println(String.format("0x%08x: %04x %s", pc, code, dis.disasm(pc, code)));
-        dumpRegisters();
+        if ((sr & SR_FLAG_T_MASK) != 0) {
+            int d = 0;
+
+            if ((code & 0x80) == 0) {
+                d = (0x000000FF & code);
+            } else {
+                d = (0xFFFFFF00 | code);
+            }
+
+            pc = pc + (d << 1) + 4;
+
+            cycles--;
+        } else {
+            cycles--;
+            pc += 2;
+        }
     }
 
     private void BTS(int code) {

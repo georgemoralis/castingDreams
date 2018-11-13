@@ -1,3 +1,7 @@
+13/11/2018
+==========
+-added sysblock registers.(mostly interrupt) .Now we reach a05f80e8 (video_cfg register)
+
 12/11/2018
 ==========
 -More dummy pvr2 registers. Now we reach interrupt controller

@@ -106,7 +106,7 @@ public class Disassembler {
                         //MOVWS0(opcode);
                         return String.format("MOVWS0 ???");
                     case 6:
-                        return String.format("mov.l R%d, @(%d, R%d)",RM(opcode),DISP(opcode),RN(opcode));
+                        return String.format("mov.l R%d, @(%d, R%d)", RM(opcode), DISP(opcode), RN(opcode));
                     case 7:
                         //MULL(opcode);
                         return String.format("MULL ???");
@@ -278,8 +278,7 @@ public class Disassembler {
                         //SUBV(opcode);
                         return String.format("???");
                     case 12:
-                        //ADD(opcode);
-                        return String.format("???");
+                        return String.format("add R%d, R%d",RM(opcode),RN(opcode));
                     case 13:
                         //DMULS(opcode);
                         return String.format("???");
@@ -485,7 +484,7 @@ public class Disassembler {
                     case 8:
                         switch ((opcode >>> 4) & 0xf) {
                             case 0:
-                                return String.format("shll2 R%d",RN(opcode));
+                                return String.format("shll2 R%d", RN(opcode));
                             case 1:
                                 return String.format("shll8 R%d", RN(opcode));
                             case 2:
@@ -641,7 +640,7 @@ public class Disassembler {
                         //NEG(opcode);
                         return String.format("???");
                     case 12:
-                        return String.format("extu.b R%d, R%d",RM(opcode),RN(opcode));
+                        return String.format("extu.b R%d, R%d", RM(opcode), RN(opcode));
                     case 13:
                         //EXTUW(opcode);
                         return String.format("???");
@@ -669,15 +668,16 @@ public class Disassembler {
                         return String.format("MOVBL4 ???");
                     case 5: {
                         int reference = IMM(opcode) * 2 + pc + 4;
-                        return String.format("mov.w @(H'%08x), R%d", reference, RN(opcode));
+                        return String.format("mov.w @(0x%08x), R%d", reference, RN(opcode));
                     }
                     case 8: {
                         int temp = ((IMM(opcode) << 24)) >> 24;
-                        return String.format("cmp/eq H'%02x, R0", temp);
+                        return String.format("cmp/eq 0x%02x, R0", temp);
                     }
-                    case 9:
-                        //BT(opcode);
-                        return String.format("???");
+                    case 9: {
+                        int temp = (((IMM(opcode) << 24)) >> 24) * 2;
+                        return String.format("bt 0x%08x", temp + (pc + 4));
+                    }
                     case 11: {
                         int temp = (((IMM(opcode) << 24)) >> 24) * 2;
                         return String.format("bf #0x%08X", temp + (pc + 4));

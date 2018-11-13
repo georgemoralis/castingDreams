@@ -13,11 +13,13 @@ public class LogUtil {
     private FileWriter logSerialPort;
     private FileWriter logCache;
     private FileWriter logPvr;
+    private FileWriter logSys;
 
     public final static int IOREGS = 0;
     public final static int AICAREGS = 1;
     public final static int CACHE = 2;
     public final static int PVR = 3;
+    public final static int SYS = 4;
 
     public LogUtil() {
         try {
@@ -26,6 +28,7 @@ public class LogUtil {
             aicaRegs = new FileWriter("aicaregsLog.txt");
             logCache = new FileWriter("cacheLog.txt");
             logPvr = new FileWriter("pvrLog.txt");
+            logSys = new FileWriter("sysLog.txt");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,6 +77,15 @@ public class LogUtil {
                     logPvr.write(str);
                     logPvr.write("\n");
                     logPvr.flush();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case SYS:
+                try {
+                    logSys.write(str);
+                    logSys.write("\n");
+                    logSys.flush();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

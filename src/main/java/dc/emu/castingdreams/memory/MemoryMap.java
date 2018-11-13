@@ -8,6 +8,8 @@ import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_PVR2_CORE_FIRS
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_PVR2_CORE_LAST;
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_RAM_FIRST;
 import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_RAM_LAST;
+import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_SYS_FIRST;
+import static dc.emu.castingdreams.memory.MemoryMapConstants.ADDR_SYS_LAST;
 import dc.emu.castingdreams.util.UnsignedBuffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -57,6 +59,9 @@ public class MemoryMap {
         } else if (addr >= ADDR_PVR2_CORE_FIRST && addr <= ADDR_PVR2_CORE_LAST) {
             return DCemu.pvr2cregs.read32(addr);
         }
+        else if (addr >= ADDR_SYS_FIRST && addr <= ADDR_SYS_LAST) {
+            return DCemu.sysblock.read32(address);
+        }
         System.out.println("read32 " + Integer.toHexString(addr));
         throw new UnsupportedOperationException("mem_read32");
     }
@@ -93,6 +98,10 @@ public class MemoryMap {
             return;
         } else if (addr >= ADDR_PVR2_CORE_FIRST && addr <= ADDR_PVR2_CORE_LAST) {
             DCemu.pvr2cregs.write32(addr, value);
+            return;
+        }
+        else if (addr >= ADDR_SYS_FIRST && addr <= ADDR_SYS_LAST) {
+            DCemu.sysblock.write32(address, value);
             return;
         }
 
